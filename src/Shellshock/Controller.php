@@ -19,6 +19,15 @@ class Controller {
 	protected $verbose;
 	/** @var array|null $sshDetails */
 	protected $sshDetails;
+	/** @var bool $useColor	Whether to colourize output */
+	protected $useColor	= true;
+
+	/**
+	 * @param bool $useColor	Whether to colourize output
+	 */
+	public function setUseColor($useColor){
+		$this->useColor	= $useColor;
+	}
 
 	/**
 	 * Runs the application.
@@ -309,24 +318,39 @@ class Controller {
 			$line	= $line->getMessage();
 		}
 
-		$colorInstance	= new Color();
-		$colorInstance($line);
-		switch($type){
-			case static::TYPE_SUCCESS:
-				$colorInstance("✔︎ ".$line)->bg('green')->bold()->white();
-				break;
-
-			case static::TYPE_ERROR:
-				Terminal::beep();
-				$colorInstance("ERROR: ".$line)->bg('red')->bold()->white();
-				break;
-
-			case static::TYPE_INFO:
-				$colorInstance($line)->bg('cyan')->white();
-				break;
+		$prefixes	= [
+			static::TYPE_SUCCESS	=> '✔ ',
+			static::TYPE_ERROR		=> 'ERROR: ',
+		];
+		if(isset($prefixes[$type])){
+			// Prepend label for specific types
+			$line	= $prefixes[$type].$line;
 		}
 
-		echo $colorInstance;
+		if($this->useColor){
+			// Add colour highlights
+			$colorInstance = new Color();
+			$colorInstance($line);
+			switch($type){
+				case static::TYPE_SUCCESS:
+					$colorInstance->bg('green')->bold()->white();
+					break;
+
+				case static::TYPE_ERROR:
+					Terminal::beep();
+					$colorInstance->bg('red')->bold()->white();
+					break;
+
+				case static::TYPE_INFO:
+					$colorInstance->bg('cyan')->white();
+					break;
+			}
+
+			$line	= (string)$colorInstance;
+		}
+
+		echo $line;
+
 		if($newline){
 			echo PHP_EOL;
 		}
