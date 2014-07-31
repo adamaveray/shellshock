@@ -5,7 +5,7 @@ use Colors\Color;
 use Commando\Util\Terminal;
 
 class Controller {
-	const FILE_RUNNER	= 'runner.sh';
+	const FILE_RUNNER	= 'scripts/runner.sh';
 	const TYPE_ERROR	= 'error';
 	const TYPE_SUCCESS	= 'success';
 	const TYPE_INFO		= 'info';

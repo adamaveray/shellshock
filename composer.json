@@ -1,8 +1,7 @@
 {
 	"autoload":	{
-		"psr-0":	{
-			"Shellshock":		"src",
-			"Shellshock\\Test":	"tests"
+		"psr-4":	{
+			"Shellshock\\":		"src"
 		}
 	},
 	"require":	{

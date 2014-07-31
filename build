@@ -8,6 +8,7 @@ $rename	= 'shellshock';
 
 // The files to include in the Phar
 $files	= [
+	'scripts',
 	'src',
 	'vendor',
 ];
@@ -31,7 +32,7 @@ $stub	= <<<PHP
 #!/usr/bin/env php
 <?php
 Phar::mapPhar();
-require('phar://'.__FILE__.'/src/run.php');
+require('phar://'.__FILE__.'/scripts/run.php');
 __HALT_COMPILER();
 PHP;
 $phar->setStub($stub);

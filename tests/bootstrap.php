@@ -9,3 +9,5 @@ if(!$loader){
     echo 'You must install the Composer dependencies (`composer install`)';
     die(1);
 }
+
+$loader->addPsr4('Shellshock\\', __DIR__.'/Shellshock', true);
