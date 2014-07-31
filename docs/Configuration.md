@@ -9,7 +9,7 @@ _(If the config file seems confusing, see examples below for better visualisatio
 
 - `connection`: An object with settings for connecting to the remote hosts. Each key can be either a single hostname/IP, or a hostname/IP with an asterisk for wildcard matching of many.
 
-	If the value is a string, it will use the settings from the host with that name. Otherwise, it  should be an object with any of the following optional keys:
+	If the value is a string, it will use the settings from the host with that name. Otherwise, it should be an object with any of the following optional keys:
 	
 	- `user`: The username to use for SSH
 	- `sudo`: A boolean for whether to run all commands with `sudo`
