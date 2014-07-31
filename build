@@ -1,0 +1,50 @@
+#!/usr/bin/env php
+<?php
+ini_set('memory_limit','16M');
+
+$source	= __DIR__;
+$output	= __DIR__.'/'.'Shellshock.phar';
+$rename	= 'shellshock';
+
+// The files to include in the Phar
+$files	= [
+	'src',
+	'vendor',
+];
+
+// Load files
+$iterator	= new \RecursiveDirectoryIterator($source, \FilesystemIterator::SKIP_DOTS);
+$iterator	= new \RecursiveCallbackFilterIterator($iterator, function($item) use($files, $source){
+	// Remove full path
+	$relative	= substr($item, strlen($source)+1);
+
+	// Must be permitted top level file, or child of permitted directory
+	return (in_array($relative, $files) || (strstr($relative, '/') !== false));
+});
+$iterator	= new \RecursiveIteratorIterator($iterator);
+
+// Build Phar
+$phar = new \Phar($output, 0, basename($output));
+$phar->buildFromIterator($iterator, $source);
+
+$stub	= <<<PHP
+#!/usr/bin/env php
+<?php
+Phar::mapPhar();
+require('phar://'.__FILE__.'/src/run.php');
+__HALT_COMPILER();
+PHP;
+$phar->setStub($stub);
+
+// Close phar
+unset($phar);
+
+// Make executable
+chmod($output, 0755);
+
+// Rename
+$target = dirname($output).'/'.$rename;
+rename($output, $target);
+
+echo 'Built to "'.$target.'"';
+echo "\n";

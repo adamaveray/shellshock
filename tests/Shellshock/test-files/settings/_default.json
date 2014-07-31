@@ -1,0 +1,9 @@
+{
+	"files":	[
+		"file.txt"
+	],
+	"scripts":	[
+		"script1.sh",
+		"script2.sh"
+	]
+}
