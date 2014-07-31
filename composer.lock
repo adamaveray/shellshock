@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9a6ef00abc24af6e817d7e142ddfda90",
+    "hash": "b90394ce1300f7c0a1335609320d4f26",
     "packages": [
         {
             "name": "kevinlebrun/colors.php",
