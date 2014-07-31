@@ -1,6 +1,10 @@
 Shellshock
 ==========
 
+[![Build Status](https://travis-ci.org/adamaveray/shellshock.svg?branch=master)](https://travis-ci.org/adamaveray/shellshock)
+[![Code Coverage](https://scrutinizer-ci.com/g/adamaveray/shellshock/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/adamaveray/shellshock/?branch=master)
+
+
 Inspired by [FSS](http://fuckingshellscripts.org), a glorified wrapper around provisioning servers with shell scripts. Shellshock lets you group the scripts into "roles", manages putting the scripts and related files on the remote servers and running them, and not a whole lot else. You probably don't want to use this.
 
 Shellshock's goals:
