@@ -2,10 +2,20 @@
 namespace Shellshock;
 
 class Utilities {
+	/** @var string $homeDir */
+	protected static $homeDir;
+
 	/**
 	 * @codeCoverageIgnore
 	 */
 	private function __construct(){}
+
+	/**
+	 * @param string $homeDir	The user's home directory for tilde expansion
+	 */
+	public static function setHomeDir($homeDir){
+		static::$homeDir	= $homeDir;
+	}
 
 	/**
 	 * @param string $path	A path to make absolute
@@ -14,11 +24,11 @@ class Utilities {
 	public static function normalizePath($path){
 		if($path === '~' || substr($path, 0, 2) === '~/'){
 			// Expand tilde
-			if(!isset($_SERVER['HOME'])){
-				throw new \RuntimeException('Cannot expand tilde');
+			if(!isset(static::$homeDir)){
+				throw new \RuntimeException('Cannot expand tilde - home dir not set');
 			}
 
-			$path	= $_SERVER['HOME'].substr($path, 1);
+			$path	= static::$homeDir.substr($path, 1);
 
 		} else if(substr($path, 0, 1) !== '/'){
 			// Make relative path absolute
