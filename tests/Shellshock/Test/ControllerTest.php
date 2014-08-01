@@ -37,6 +37,8 @@ class ControllerTest extends \PHPUnit_Framework_TestCase {
 					   ->setMethods($methods)
 					   ->getMock();
 
+		$mock->setUseColor(false);
+
 		return $mock;
 	}
 
@@ -101,7 +103,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase {
 	 * @covers ::<!public>
 	 * @dataProvider runDataProvider
 	 */
-	public function testRun(array $commands, $stdout, array $args){
+	public function testRun(array $commands, $stdout, array $args, array $stdoutFilters = null){
 		$controller	= $this->buildControllerWithExpectedCommands($commands, $executedCommands);
 
 		array_unshift($args, '__placeholder__');
@@ -109,20 +111,21 @@ class ControllerTest extends \PHPUnit_Framework_TestCase {
 		ob_start();
 		$controller->run($args);
 
+		// Verify stdout
+		$result	= ob_get_clean();
+		foreach((array)$stdoutFilters as $find => $replace){
+			// Apply custom replacement filters
+			$result	= preg_replace('~'.$find.'~', $replace, $result);
+		}
+		$this->assertEquals($stdout, $result, 'The stdout should be correct');
+
+		// Verify commands
 		$replace	= '[/\w\d_ \-\.]+';
 		$find		= [
 			static::REPLACE_DIR		=> $replace,
 			static::REPLACE_SOURCE	=> $replace,
 			static::REPLACE_RUNNER	=> $replace,
 		];
-
-		// Verify stdout
-		$result	= str_replace("", '', ob_get_clean()); // Strip special terminal colour characters
-		$pattern	= preg_quote($stdout, '~');
-		$pattern	= str_replace(array_keys($find), array_values($find), $pattern);
-		$pattern	= '~^'.$pattern.'$~';
-		$this->assertTrue((bool)preg_match($pattern, $result), 'The stdout should be correct'."\n".$result);
-
 		$count	= 0;
 		foreach($commands as $expectedCommand){
 			$count++;
@@ -179,11 +182,11 @@ class ControllerTest extends \PHPUnit_Framework_TestCase {
 			],
 			<<<EOD
 127.0.0.2
-✔︎ Success
+✔ Success
 127.0.0.3
-✔︎ Success
+✔ Success
 127.0.0.4
-✔︎ Success
+✔ Success
 
 EOD
 			,
@@ -213,9 +216,9 @@ EOD
 			<<<EOD
 127.0.0.2
 127.0.0.3
-✔︎ Success
+✔ Success
 127.0.0.4
-✔︎ Success
+✔ Success
 
 EOD
 			,
@@ -250,9 +253,9 @@ EOD
 127.0.0.2
 ERROR: Simulated error
 127.0.0.3
-✔︎ Success
+✔ Success
 127.0.0.4
-✔︎ Success
+✔ Success
 
 EOD
 			,
@@ -287,13 +290,14 @@ EOD
 127.0.0.2
 ERROR: Could not remove files (${REPLACE_DIR})
 127.0.0.3
-✔︎ Success
+✔ Success
 127.0.0.4
-✔︎ Success
+✔ Success
 
 EOD
 			,
 			[static::getFilePath()],
+			['(Could not remove files \().+?(\))'	=> '$1'.static::REPLACE_DIR.'$2'], // Clear directory from stdout
 		];
 
 		return $items;
@@ -328,7 +332,7 @@ EOD
 			],
 			<<<EOD
 127.0.0.2
-✔︎ Connected
+✔ Connected
 127.0.0.3
 ERROR: Could not connect
 127.0.0.4
@@ -403,7 +407,7 @@ EOD
 			],
 			<<<EOD
 127.0.0.2
-✔︎ Success
+✔ Success
 
 EOD
 			,
@@ -433,7 +437,7 @@ EOD
 			],
 			<<<EOD
 127.0.0.2
-✔︎ Success
+✔ Success
 
 EOD
 			,

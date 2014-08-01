@@ -1,8 +1,25 @@
 {
+	"name":			"adamaveray/shellshock",
+	"description":	"A glorified wrapper around provisioning servers with shell scripts",
+	"version":		"0.1.0",
+	"keywords":		["provisioning"],
+	"homepage":		"https://github.com/adamaveray/shellshock",
+	"time":			"2014-07-31",
+	"license":		"MIT",
+	"authors":		[
+		{
+			"name":		"Adam Averay",
+			"email":	"adam@averay.com",
+			"homepage":	"http://adamaveray.com.au"
+		}
+	],
+	"support": {
+		"source":	"https://github.com/adamaveray/shellshock",
+		"issues":	"https://github.com/adamaveray/shellshock/issues"
+	},
 	"autoload":	{
-		"psr-0":	{
-			"Shellshock":		"src",
-			"Shellshock\\Test":	"tests"
+		"psr-4":	{
+			"Shellshock\\":		"src"
 		}
 	},
 	"require":	{

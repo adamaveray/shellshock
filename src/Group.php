@@ -110,6 +110,8 @@ class Group extends Settings {
 
 
 	/**
+	 * @param string $path
+	 * @return bool
 	 * @codeCoverageIgnore
 	 */
 	protected function fileExists($path){
@@ -117,6 +119,8 @@ class Group extends Settings {
 	}
 
 	/**
+	 * @param string $path
+	 * @return string|false
 	 * @codeCoverageIgnore
 	 */
 	protected function getFileContents($path){

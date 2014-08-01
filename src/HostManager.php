@@ -1,9 +1,6 @@
 <?php
 namespace Shellshock;
 
-use Shellshock\Host;
-use Shellshock\Group;
-
 class HostManager extends \ArrayObject {
 	const RECURSION_MAX	= 10;
 	const SETTINGS_KEY_DEFAULT	= '_default';
@@ -16,6 +13,7 @@ class HostManager extends \ArrayObject {
 	 * @return Group[]			An array with group names as keys, and Group objects an values
 	 */
 	public function loadHosts(array $hostData, $addDefault = false){
+		/** @var Group[] $groups */
 		$groups	= [];
 
 		if($addDefault){
@@ -132,7 +130,7 @@ class HostManager extends \ArrayObject {
 	 *	- string 'private-key'
 	 *	- bool 'verify-host'
 	 *
-	 * @param array $hosts		An array (or array-compatible object) of Host objects
+	 * @param Host[]|HostManager $hosts	An array (or array-compatible object) of Host objects
 	 */
 	protected function applyConnectionSettingsToHosts(array $settings, $hosts){
 		$map	= [
@@ -200,7 +198,7 @@ class HostManager extends \ArrayObject {
 	 *
 	 * @param array &$groups		The groups to filter. Will be set to a filtered version of itself.
 	 * @param array $groupNames		An array of group name strings to filter by
-	 * @return array|HostManager	A HostManager instance containing the Host objects within the filtered Groups
+	 * @return HostManager			A HostManager instance containing the Host objects within the filtered Groups
 	 */
 	public static function filterHosts(array &$groups, array $groupNames){
 		$hosts	= new HostManager();

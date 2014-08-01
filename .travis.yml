@@ -1,0 +1,19 @@
+language: php
+php:
+  - 5.4
+  - 5.5
+  - 5.6
+  - hhvm
+
+before_script:
+  # Setup dependencies
+  - composer self-update
+  - composer install --dev --prefer-source --no-interaction
+
+# Run tests
+script: ./vendor/bin/phpunit --configuration tests/phpunit.xml --coverage-clover=coverage.clover --coverage-text tests
+
+after_script:
+  # Send coverage stats
+  - wget https://scrutinizer-ci.com/ocular.phar
+  - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
