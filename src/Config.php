@@ -58,4 +58,4 @@ class Config extends Settings {
 	protected function getFileContents($path){
 		return file_get_contents($path);
 	}
-};
+}

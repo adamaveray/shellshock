@@ -66,9 +66,6 @@ class HostManagerTest extends \PHPUnit_Framework_TestCase {
 	 */
 	public function testLoadHosts(array $allHosts, array $hostData, $addDefault = false){
 		$instance	= new HostManager();
-		if($addDefault){
-			xdebug_break();
-		}
 		$groups		= $instance->loadHosts($hostData, $addDefault);
 
 		// Check grouped

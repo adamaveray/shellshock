@@ -8,9 +8,15 @@ use Shellshock\Utilities;
  */
 class UtilitiesTest extends \PHPUnit_Framework_TestCase {
 	const TARGET_CLASSNAME	= '\\Shellshock\\Utilities';
+	const HOME_DIR	= '/path/to/dir';
+
+	public function setUp(){
+		Utilities::setHomeDir(static::HOME_DIR);
+	}
 
 	/**
 	 * @covers ::normalizePath
+	 * @covers ::setHomeDir
 	 * @covers ::<!public>
 	 * @dataProvider normalizePathDataProvider
 	 */
@@ -29,19 +35,19 @@ class UtilitiesTest extends \PHPUnit_Framework_TestCase {
 			['',				getcwd(),					'Relative paths should be made absolute'],
 
 			// Home directory
-			['~/path/to/file',	$_SERVER['HOME'].'/path/to/file',	'Home-relative paths should be expanded'],
-			['~',				$_SERVER['HOME'],					'Home-relative paths should be expanded'],
+			['~/path/to/file',	static::HOME_DIR.'/path/to/file',	'Home-relative paths should be expanded'],
+			['~',				static::HOME_DIR,					'Home-relative paths should be expanded'],
 		];
 	}
 
 	/**
 	 * @covers ::normalizePath
+	 * @covers ::setHomeDir
 	 * @covers ::<!public>
 	 * @expectedException \RuntimeException
-	 * @backupGlobals enabled
 	 */
 	public function testNormalizePathWithoutHome(){
-		unset($_SERVER['HOME']);
+		Utilities::setHomeDir(null);
 		$this->testNormalizePath('~/path/to/file', null, null);
 	}
 }
