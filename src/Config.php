@@ -51,6 +51,8 @@ class Config extends Settings {
 
 
 	/**
+	 * @param string $path
+	 * @return string|false
 	 * @codeCoverageIgnore
 	 */
 	protected function getFileContents($path){

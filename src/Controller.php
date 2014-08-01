@@ -37,8 +37,8 @@ class Controller {
 	public function run(array $argv){
 		// Load CLI config
 		$input	= new Input($argv);
-		$this->safety	= $input->get('safety');
-		$this->verbose	= $input->get('verbose');
+		$this->safety	= (bool)$input->get('safety');
+		$this->verbose	= (bool)$input->get('verbose');
 
 		// Load config file
 		$config	= new Config();
@@ -53,23 +53,20 @@ class Controller {
 		$hosts->applyConnectionSettings($config->get('connections'));
 
 		// Filter hosts by group
-		/** @var Host[] $filteredHosts */
 		$filteredHosts	= HostManager::filterHosts($groups, $input->get('groups'));
 
-		$this->runCommands($input, $config, $groups, $filteredHosts);
+		$this->runCommands($input, $filteredHosts);
 	}
 
 	/**
 	 * Determines which commands should be run on the correct hosts, and executes them.
 	 *
 	 * @param Input $input
-	 * @param Config $config
-	 * @param array $groups
 	 * @param HostManager $allHosts
 	 *
 	 * @throws \ErrorException
 	 */
-	protected function runCommands(Input $input, Config $config, array $groups, HostManager $allHosts){
+	protected function runCommands(Input $input, HostManager $allHosts){
 		if($input->get('ping')){
 			// Test connections
 			foreach($allHosts as $host){
@@ -194,15 +191,16 @@ class Controller {
 	/**
 	 * Runs the given command on the local machine.
 	 *
-	 * @param string $command	The full local command to execute
-	 * @return string			The stdout from the command
-	 * @throws \ErrorException	The command failed to execute
+	 * @param string $command		The full local command to execute
+	 * @param bool|null $printout	Whether to echo the output from the command. If null, defaults to $this->verbose
+	 * @return string				The stdout from the command
+	 * @throws \ErrorException		The command failed to execute
 	 */
 	protected function executeCommand($command, $printout = null){
 		if($this->safety){
 			// Display command only
 			$this->lineout($command, true);
-			return;
+			return null;
 		}
 
 		$environment	= [];
